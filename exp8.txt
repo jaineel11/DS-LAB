@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+
+struct node
+{
+    int data;
+    struct node *left;
+    struct node *right;
+};
+
+struct node *newnode(int x);
+void mirror(struct node *);
+struct node *clonebinarytree(struct node *);
+void inorder(struct node *);
+int countnodes(struct node *);
+
+int main()
+{
+    struct node *clone;
+    struct node *root = newnode(6);
+    root->left=newnode(4);
+    root->left->left=newnode(40);
+    root->left->right=newnode(14);
+    root->right=newnode(5);
+    root->right->left=newnode(50);
+    root->right->right=newnode(85);
+
+    printf("\n Inorder traversal of original tree\n");
+    inorder(root);
+
+    mirror(root);
+    printf("\n Inorder traversal of mirrored tree\n");
+    inorder(root);
+
+    clone=clonebinarytree(root);
+    printf("\n Inorder traversal of clone tree\n");
+    inorder(clone);
+
+    printf("\n Number of nodes in Tree = %d\n", countnodes(root));
+    return 0;
+
+
+
+
+
+
+
+}
+
+struct node *newnode(int x)
+{
+    struct node *ptr = (struct node *)malloc(sizeof(struct node));
+    ptr->data = x;
+    ptr->left = NULL;
+    ptr->right = NULL;
+    return (ptr);
+}
+
+void mirror(struct node *ptr)
+{
+    if (ptr == NULL)
+    {
+        return;
+    }
+    else
+    {
+        struct node *temp;
+        mirror(ptr->left);
+        mirror(ptr->right);
+        // x=ptr->left y=ptr->right
+        temp = ptr->left;
+        ptr->left = ptr->right;
+        ptr->right = temp;
+    }
+}
+
+struct node *clonebinarytree(struct node *root)
+{
+    if (root ==  NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        struct node *newptr = newnode(root->data);
+        newptr->left = clonebinarytree(root->left);
+        newptr->left = clonebinarytree(root->right);
+        return newptr;
+    }
+}
+
+void inorder(struct node *ptr)
+{
+    if (ptr == NULL)
+    {
+        return;
+    }
+    else
+    {
+        inorder(ptr->left);
+        printf("%d\t", ptr->data);
+        inorder(ptr->right);
+    }
+}
+
+int countnodes(struct node *root)
+{
+    int count = 0;
+    if (root != NULL)
+    {
+        countnodes(root->left);
+        count++;
+        countnodes(root->right);
+    }
+    return count;
+}
